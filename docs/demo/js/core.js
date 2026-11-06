@@ -158,12 +158,13 @@ export function registerServiceWorker() {
   if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.register('sw.js').catch(console.warn);
 }
 
-// Browser Spanish voices sound poor, so the public demo keeps Spanish screens silent.
-export const canSpeak = (lang) => 'speechSynthesis' in window && !(DEMO && lang === 'es');
+// Off for now because browser voices sound poor. Set to true to bring back spoken words and the speaker buttons.
+const SPEECH_ENABLED = false;
+export const canSpeak = () => SPEECH_ENABLED && 'speechSynthesis' in window;
 
 // Spoken words. A phone with no voice for this language stays silent, so pictures must carry the meaning.
 export function speak(text, lang) {
-  if (!canSpeak(lang) || !text) return;
+  if (!canSpeak() || !text) return;
   speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = lang;

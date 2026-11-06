@@ -84,7 +84,7 @@ function taskCard(task) {
   return `<article class="task is-${esc(task.status)}">
     <div class="task-top">
       <div class="pics">${taskPicture(task)}</div>
-      ${canSpeak(lang) ? `<button class="say emoji" data-act="say-task" data-id="${esc(task.id)}" aria-label="${esc(taskWords(task))}">🔊</button>` : ''}
+      ${canSpeak() ? `<button class="say emoji" data-act="say-task" data-id="${esc(task.id)}" aria-label="${esc(taskWords(task))}">🔊</button>` : ''}
     </div>
     <div class="task-words">${esc(taskWords(task))}</div>
     ${zone ? `<div class="task-map">${miniMap(store.state.zones, zone.id, myFix ?? me())}<span class="muted">${esc(zoneName(zone))}</span></div>` : ''}
@@ -433,7 +433,7 @@ function consentSheet() {
   say(t('consentSay'));
   openSheet(`<div style="text-align:center"><div class="emoji" style="font-size:80px">📍</div><h2>${esc(t('consentTitle'))}</h2></div>
     <p style="margin:0;font-size:20px">${esc(t('consentSay'))}</p>
-    ${canSpeak(lang) ? `<button class="say emoji" data-say style="justify-self:center" aria-label="${esc(t('consentSay'))}">🔊</button>` : ''}
+    ${canSpeak() ? `<button class="say emoji" data-say style="justify-self:center" aria-label="${esc(t('consentSay'))}">🔊</button>` : ''}
     <div class="sheet-row">
       <button class="big no" data-no><span class="glyph">✕</span>${esc(t('no'))}</button>
       <button class="big yes" data-yes><span class="glyph">✓</span>${esc(t('yes'))}</button>

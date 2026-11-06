@@ -80,4 +80,5 @@ Tags the system hasn't seen appear under Equipment & tags, ready to assign. This
 - **Time corrections.** A supervisor can add a missing punch, but not cancel a wrong one.
 - **Piece rate, payroll export, crew setup screens and drawing fields on the map.** Demo people, fields and equipment are seeded in `src/seed.js`.
 - **Picture testing.** Emoji are placeholders until tested with real workers.
+- **Spoken words.** Turned off for now because browser voices sound poor. `SPEECH_ENABLED` in `public/js/core.js` brings them back. Recorded voice clips still work.
 - **Boss screen languages.** The supervisor screen is English only. Worker screens are English and Spanish.
