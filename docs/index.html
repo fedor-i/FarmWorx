@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FarmWorx</title>
+<meta name="description" content="Helping farmers manage time + tasks. A prototype for small farms, built around pictures and voice.">
+<link rel="icon" href="icon.svg">
+<style>
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-display: swap; src: url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-weight: 600; font-display: swap; src: url(fonts/barlow-condensed-latin-600-normal.woff2) format("woff2"); }
+@font-face { font-family: "Barlow Condensed"; font-weight: 700; font-display: swap; src: url(fonts/barlow-condensed-latin-700-normal.woff2) format("woff2"); }
+
+:root {
+  --bg: #eef2ee; --surface: #fbfcfa; --sunken: #e2e9e3; --ink: #1c2a26; --muted: #52635c; --line: #c6d1c9;
+  --accent: #0d646b; --accent-ink: #fff; --accent-soft: #d6e9e8; --warn: #6e4a00; --warn-soft: #f6eaca;
+  --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --body: "Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #131b18; --surface: #1b2521; --sunken: #24302b; --ink: #e8efeb; --muted: #a4b5ad; --line: #36453e;
+  --accent: #6cc7cc; --accent-ink: #0f2223; --accent-soft: #1d3a3c; --warn: #e6c063; --warn-soft: #3b3018;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #131b18; --surface: #1b2521; --sunken: #24302b; --ink: #e8efeb; --muted: #a4b5ad; --line: #36453e;
+  --accent: #6cc7cc; --accent-ink: #0f2223; --accent-soft: #1d3a3c; --warn: #e6c063; --warn-soft: #3b3018;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 18px/1.5 var(--body); }
+img { display: block; max-width: 100%; height: auto; }
+a { color: var(--accent); }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.05; margin: 0; letter-spacing: .01em; }
+h2 { font-size: clamp(32px, 5vw, 44px); }
+h3 { font-size: 25px; }
+p { margin: 0; }
+code { font-size: .9em; }
+
+.wrap { width: min(100% - 32px, 1120px); margin-inline: auto; }
+section { padding-block: clamp(44px, 7vw, 76px); }
+.band { background: var(--surface); border-block: 1px solid var(--line); }
+.lead { color: var(--muted); max-width: 62ch; margin-top: 12px; }
+
+.hero { padding-block: clamp(32px, 6vw, 64px) clamp(40px, 6vw, 68px); }
+.brand { font: 700 26px/1 var(--display); margin-bottom: clamp(28px, 5vw, 48px); }
+.hero h1 { font-size: clamp(46px, 8.5vw, 84px); max-width: 15ch; }
+.hero .lead { font-size: clamp(18px, 2.4vw, 21px); }
+.status { display: inline-block; margin-top: 18px; padding: 8px 12px; border-radius: 8px; background: var(--warn-soft); color: var(--warn); font-size: 16px; font-weight: 700; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.btn { display: inline-block; padding: 12px 18px; border-radius: 10px; background: var(--sunken); color: var(--ink); font-weight: 700; text-decoration: none; }
+.btn.main { background: var(--accent); color: var(--accent-ink); }
+.shot { margin-top: clamp(28px, 5vw, 44px); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+
+.field { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 60px); align-items: center; }
+.phones { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+figure { margin: 0; }
+figcaption { margin-top: 8px; color: var(--muted); font-size: 15px; }
+.phones img { border-radius: 18px; border: 1px solid var(--line); }
+.points { margin: 22px 0 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+.points strong { display: block; }
+.points span { color: var(--muted); }
+
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 28px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.tile .emoji { font-size: 32px; line-height: 1; display: block; margin-bottom: 10px; }
+.tile p { color: var(--muted); margin-top: 6px; font-size: 17px; }
+
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.pair img { border: 1px solid var(--line); border-radius: 12px; }
+
+.scroll { overflow-x: auto; margin-top: 24px; }
+table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 17px; }
+th { text-align: left; font-size: 14px; color: var(--muted); }
+th, td { padding: 10px 14px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+
+pre { margin: 18px 0 0; padding: 14px 16px; border-radius: 10px; background: var(--sunken); overflow-x: auto; font-size: 16px; line-height: 1.6; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 5vw, 60px); }
+.todo { margin: 18px 0 0; padding-left: 20px; display: grid; gap: 8px; }
+footer { padding-block: 26px 40px; color: var(--muted); font-size: 15px; }
+
+@media (max-width: 820px) {
+  .field, .two, .pair { grid-template-columns: minmax(0, 1fr); }
+  .grid { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="brand">FarmWorx</div>
+  <h1>Helping farmers manage time + tasks</h1>
+  <p class="lead">A prototype for small farms, built around pictures and voice so the whole crew can use it, including people who don't read the language it was written in, or don't read at all.</p>
+  <p class="status">Prototype with made-up demo data. No login yet, and not yet tested on real phones or tags.</p>
+  <div class="actions">
+    <a class="btn main" href="https://github.com/fedor-i/FarmWorx">See the code</a>
+    <a class="btn" href="#run">Run it yourself</a>
+  </div>
+  <figure class="shot">
+    <img src="img/supervisor-map.jpg" width="800" height="524" alt="Supervisor screen: a satellite map with four coloured fields, one marked no entry, workers and machines shown on it, and a list of alerts and who is on shift.">
+  </figure>
+</header>
+
+<section class="band">
+  <div class="wrap field">
+    <div class="phones">
+      <figure>
+        <img src="img/worker-phone.jpg" width="780" height="1688" loading="lazy" alt="Worker phone in Spanish: large break and stop buttons, and a task shown as a basket, a strawberry, times 40 and a red field sign.">
+        <figcaption>A task reads as pictures, with a speaker button and a small field map.</figcaption>
+      </figure>
+      <figure>
+        <img src="img/no-entry.jpg" width="760" height="1688" loading="lazy" alt="Full red warning screen saying do not enter, in Spanish, with the time the field reopens.">
+        <figcaption>Walk into a closed field and the phone warns you out loud.</figcaption>
+      </figure>
+    </div>
+    <div>
+      <h2>Made for the person in the field</h2>
+      <ul class="points">
+        <li><strong>Pictures first, with voice</strong><span>Tasks are icons, a count and a coloured field sign. Tap to hear them, or play a message recorded by the supervisor.</span></li>
+        <li><strong>No reading to get started</strong><span>Workers tap their own face. The app uses the language on their profile, English or Spanish today.</span></li>
+        <li><strong>Works with no signal</strong><span>Clock-ins, task updates and notes are saved on the phone and sent later with the time they happened.</span></li>
+        <li><strong>No phone needed</strong><span>Crew without a smartphone can tap an NFC badge on a shared device at the gate.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What it does</h2>
+    <div class="grid">
+      <article class="tile"><span class="emoji">⏱️</span><h3>Time tracking</h3><p>Clock in and out, breaks, badge tap at the gate and CSV timesheets. Missing punches are flagged, never guessed.</p></article>
+      <article class="tile"><span class="emoji">🧺</span><h3>Picture tasks</h3><p>Supervisors send tasks to workers. Workers report problems and send requests back, all by picture.</p></article>
+      <article class="tile"><span class="emoji">📷</span><h3>Notes and photos</h3><p>Photos, voice notes and text, attached to a task or logged on their own with the field they came from.</p></article>
+      <article class="tile"><span class="emoji">🗺️</span><h3>Geofencing</h3><p>A live map with alerts when a machine leaves its area or someone enters a closed field. People are located only while clocked in.</p></article>
+      <article class="tile"><span class="emoji">📲</span><h3>NFC and RFID tags</h3><p>Worker badges, tool check-out and field signs by NFC. UHF, Bluetooth and GPS trackers share one input, tried so far with simulated reads.</p></article>
+      <article class="tile"><span class="emoji">⛔</span><h3>No-entry fields</h3><p>Close a field after spraying. Tasks there are blocked and the supervisor is alerted. This adds to posted signs and spoken warnings, and doesn't replace them.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <h2>For the supervisor</h2>
+    <p class="lead">Build a task from pictures and see exactly what the worker will see. Follow it across the board, then export the week's hours.</p>
+    <div class="pair">
+      <figure>
+        <img src="img/supervisor-tasks.jpg" width="800" height="524" loading="lazy" alt="New task screen with picture buttons for action, crop, field and worker, beside a preview of the worker's view.">
+        <figcaption>Task builder with a live preview</figcaption>
+      </figure>
+      <figure>
+        <img src="img/timesheet.jpg" width="800" height="524" loading="lazy" alt="Timesheet screen with weekly hours per person, a form to add a missing punch, and a list of shifts.">
+        <figcaption>Hours by person, with CSV download</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Which tag for what</h2>
+    <p class="lead">Phones only read NFC, so other tags need their own readers. Prices are rough figures, mostly from vendor sites.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Tag</th><th>Read by</th><th>Rough cost</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td>NFC</td><td>Most phones, by touch</td><td>Low cost per tag</td><td>Badges, tools, field signs</td></tr>
+          <tr><td>UHF RFID</td><td>Fixed reader, or an $800 to $2,500 phone add-on</td><td>$0.10 to $5 per tag</td><td>Bins, tools through a gate</td></tr>
+          <tr><td>Bluetooth</td><td>Gateways or a native app</td><td>$10 to $50 per tag</td><td>Pumps, trailers, generators</td></tr>
+          <tr><td>Cellular GPS</td><td>Reports by itself</td><td>$50 to $200, plus $10 to $30 a month</td><td>Tractors and valuable machines</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lead">Sources and the full reasoning are in the <a href="https://github.com/fedor-i/FarmWorx/blob/main/RESEARCH.md">research notes</a>.</p>
+  </div>
+</section>
+
+<section class="band" id="run">
+  <div class="wrap two">
+    <div>
+      <h2>Run it yourself</h2>
+      <p class="lead">This page is a preview. The app itself needs a small server, so it runs on your computer. You need Node 22.13 or newer and nothing else, and demo data is created for you.</p>
+<pre><code>git clone https://github.com/fedor-i/FarmWorx.git
+cd FarmWorx
+npm start</code></pre>
+      <p class="lead">Then open <code>http://localhost:3210</code>. The <a href="https://github.com/fedor-i/FarmWorx#five-minute-demo">README</a> has a five-minute demo.</p>
+    </div>
+    <div>
+      <h2>Still to do</h2>
+      <ul class="todo">
+        <li>Add login and permissions before any real data goes in</li>
+        <li>Test NFC, GPS, camera, microphone and speech on real phones</li>
+        <li>Build a native app, since a web app can't check location when closed. Until then, no-entry warnings aren't a safety system</li>
+        <li>Test the pictures with real crews. Emoji are placeholders</li>
+        <li>Add piece rate, payroll export and farm setup screens</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  The ranch, people and data shown are made up. Map imagery © Esri.
+</footer>
+
+</body>
+</html>

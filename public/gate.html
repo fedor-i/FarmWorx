@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FarmWorx Gate</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icon.svg">
+<link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<div class="gate">
+  <header class="gate-top"><h1>Gate clock</h1><span class="sync" id="gate-sync">✓</span></header>
+  <main class="gate-main" id="gate-main" aria-live="assertive"></main>
+  <footer class="gate-test" id="gate-test"></footer>
+</div>
+<script type="module" src="/js/gate.js"></script>
+</body>
+</html>
