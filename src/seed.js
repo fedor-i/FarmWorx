@@ -1,7 +1,4 @@
-import { join } from 'node:path';
-import { mkdirSync, rmSync } from 'node:fs';
-import { pathToFileURL } from 'node:url';
-import { openDb, tx } from './db.js';
+import { tx } from './db.js';
 import { applyOps } from './ops.js';
 import { localDate } from './timesheet.js';
 
@@ -144,19 +141,10 @@ export function seed(db, now = Date.now()) {
 
   const ops = [];
   seedHistory(ops, now);
-  const { rejected } = applyOps({ db, mediaDir: '', now }, ops);
+  const { rejected } = applyOps({ db, now }, ops);
   if (rejected.length) throw new Error(`seed failed: ${JSON.stringify(rejected[0])}`);
 }
 
 export function seedIfEmpty(db) {
   if (!db.prepare('SELECT 1 FROM people LIMIT 1').get()) seed(db);
-}
-
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const dataDir = join(import.meta.dirname, '..', 'data');
-  if (process.argv.includes('--reset')) rmSync(dataDir, { recursive: true, force: true });
-  mkdirSync(dataDir, { recursive: true });
-  const db = openDb(join(dataDir, 'farmworx.db'));
-  seedIfEmpty(db);
-  console.log('Seeded demo data');
 }

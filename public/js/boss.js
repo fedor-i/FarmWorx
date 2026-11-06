@@ -1,5 +1,5 @@
 import { ACTIONS, THINGS, REQUESTS, PROBLEMS } from './catalog.js';
-import { $, esc, uid, createStore, registerServiceWorker, startRecording, capturePhoto, NFC_SUPPORTED, writeNfc, duration, clockTime, zoneRestricted } from './core.js';
+import { DEMO, $, esc, uid, createStore, registerServiceWorker, startRecording, capturePhoto, NFC_SUPPORTED, writeNfc, duration, clockTime, zoneRestricted } from './core.js';
 
 const SUPERVISOR = 'sam';
 const TABS = [['live', 'Live map'], ['tasks', 'Tasks'], ['time', 'Time'], ['notes', 'Notes'], ['gear', 'Equipment & tags']];
@@ -17,7 +17,7 @@ const ALERT_TEXT = {
 const COLUMNS = [['request', 'From crew'], ['todo', 'To do'], ['doing', 'Doing'], ['problem', 'Problem'], ['done', 'Done']];
 
 let tab = 'live';
-let simulate = false;
+let simulate = DEMO;
 let map = null;
 const markers = new Map();
 let zoneLayers = [];
@@ -305,7 +305,7 @@ async function renderTime() {
   sheetRange ??= weekRange();
   const { from, to } = sheetRange;
   const query = `from=${from}&to=${to}`;
-  const response = await fetch(`/api/timesheet?${query}`).catch(() => null);
+  const response = await fetch(`api/timesheet?${query}`).catch(() => null);
   const sheet = response?.ok ? await response.json() : null;
   if (tab !== 'time') return;
   if (!sheet) {
@@ -319,7 +319,7 @@ async function renderTime() {
       <div class="tools">
         <label>From <input type="date" id="from" value="${from}"></label>
         <label>To <input type="date" id="to" value="${to}"></label>
-        <a class="btn main" style="text-decoration:none" href="/api/timesheet.csv?${query}">Download CSV</a>
+        <a class="btn main" style="text-decoration:none" href="api/timesheet.csv?${query}">Download CSV</a>
       </div>
       <div class="table-scroll"><table><thead><tr><th>Name</th>${sheet.totals.map(() => '').join('')}<th class="num">Total hours</th></tr></thead><tbody>
         ${sheet.totals.map((x) => `<tr><td>${esc(x.name)}</td><td class="num">${(x.workedMin / 60).toFixed(2)}</td></tr>`).join('')}
@@ -425,7 +425,7 @@ function render() {
 }
 
 async function postReadings(body) {
-  await fetch('/api/readings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  await fetch('api/readings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
 }
 
 const actions = {
@@ -451,7 +451,7 @@ const actions = {
     const ts = new Date($('#fix-time').value).getTime();
     if (!Number.isFinite(ts)) return;
     const op = { id: uid(), type: 'punch', personId: $('#fix-person').value, ts, payload: { type: $('#fix-type').value, method: 'supervisor', enteredBy: SUPERVISOR } };
-    await fetch('/api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ops: [op] }) });
+    await fetch('api/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ops: [op] }) });
   },
   'add-note': async () => {
     const text = $('#note-text').value.trim();

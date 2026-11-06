@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { openDb } from '../src/db.js';
+import { openDb } from '../src/open-db.js';
+import { fileStore } from '../src/media.js';
 import { applyOps, ingestReadings } from '../src/ops.js';
 import { seed } from '../src/seed.js';
 import { buildState } from '../src/state.js';
@@ -26,7 +27,7 @@ function fixture() {
   const mediaDir = mkdtempSync(join(tmpdir(), 'farmworx-'));
   const db = openDb();
   seed(db, NOW);
-  const ctx = { db, mediaDir, now: NOW };
+  const ctx = { db, mediaDir, saveFile: fileStore(mediaDir), now: NOW };
   const run = (type, personId, payload, ts = NOW) => {
     const result = applyOps(ctx, [{ id: `t-${++opSerial}`, type, personId, ts, payload }]);
     assert.deepEqual(result.rejected, [], JSON.stringify(result.rejected));

@@ -61,7 +61,7 @@ function noteView(row) {
     taskId: row.task_id,
     kind: row.kind,
     text: row.text,
-    url: row.media ? `/media/${row.media}` : null,
+    url: row.media ? `media/${row.media}` : null,
     zoneId: row.zone_id,
     ts: row.ts,
   };

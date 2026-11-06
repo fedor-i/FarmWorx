@@ -1,15 +1,15 @@
 # FarmWorx
 
-Helping farmers manage time + tasks.
+Helping farmers manage time & tasks.
 
-Website: https://fedor-i.github.io/FarmWorx/
+Website and live demo: https://fedor-i.github.io/FarmWorx/
 
 A prototype for small farms: time tracking, picture tasks that work without reading, notes and photos,
 geofencing for people and equipment, and NFC/RFID tags. The reasoning is in [RESEARCH.md](RESEARCH.md).
 
 ## Run it
 
-Needs Node 22.13 or newer. There is nothing to install.
+Needs Node 22.13 or newer. Running it needs nothing installed.
 
 ```bash
 npm start
@@ -17,7 +17,14 @@ npm start
 
 Open http://localhost:3210. Demo data is created on first run, and `npm run seed` resets it. `npm test` runs the tests.
 
-The website in `docs/` is a static preview. GitHub Pages can't run the server, so the app itself runs from this repo.
+The website in `docs/` includes a live demo at `docs/demo`. GitHub Pages can't run `server.js`, so the demo runs the same
+app logic inside a service worker in the visitor's browser (`src/demo`), with each visitor's made-up farm saved locally.
+After changing the app, rebuild it:
+
+```bash
+npm install
+npm run build:demo
+```
 
 ## Five-minute demo
 

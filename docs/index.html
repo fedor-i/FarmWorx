@@ -4,108 +4,250 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FarmWorx</title>
-<meta name="description" content="Helping farmers manage time + tasks. A prototype for small farms, built around pictures and voice.">
-<link rel="icon" href="icon.svg">
+<meta name="description" content="Helping farmers manage time &amp; tasks. The crew taps pictures. The supervisor gets briefed on the drive.">
+<link rel="icon" href="img/logo-mark.png">
 <style>
 @font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-display: swap; src: url(fonts/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2"); }
 @font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url(fonts/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2"); }
 @font-face { font-family: "Barlow Condensed"; font-weight: 600; font-display: swap; src: url(fonts/barlow-condensed-latin-600-normal.woff2) format("woff2"); }
 @font-face { font-family: "Barlow Condensed"; font-weight: 700; font-display: swap; src: url(fonts/barlow-condensed-latin-700-normal.woff2) format("woff2"); }
 
+/* Follows the deck: cream paper, deep field green, and sunrise orange. Always light, because the logo is drawn for it. */
 :root {
-  --bg: #eef2ee; --surface: #fbfcfa; --sunken: #e2e9e3; --ink: #1c2a26; --muted: #52635c; --line: #c6d1c9;
-  --accent: #0d646b; --accent-ink: #fff; --accent-soft: #d6e9e8; --warn: #6e4a00; --warn-soft: #f6eaca;
+  color-scheme: light;
+  --paper: #fbfbf6; --sage: #f0f3ec; --mist: #e3e9df; --night: #18271f; --night-2: #2c4a3a;
+  --ink: #18271f; --muted: #47574d; --line: #d3dacf; --rust: #a84a0a; --sun: #e8853a; --sun-soft: #f4a85c;
+  --on-night: #f1f4ee; --on-night-muted: #c6d2c9; --go: #1a7f47;
   --display: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
   --body: "Atkinson Hyperlegible", Verdana, system-ui, sans-serif;
-}
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #131b18; --surface: #1b2521; --sunken: #24302b; --ink: #e8efeb; --muted: #a4b5ad; --line: #36453e;
-  --accent: #6cc7cc; --accent-ink: #0f2223; --accent-soft: #1d3a3c; --warn: #e6c063; --warn-soft: #3b3018;
-  color-scheme: dark;
-} }
-:root[data-theme="dark"] {
-  --bg: #131b18; --surface: #1b2521; --sunken: #24302b; --ink: #e8efeb; --muted: #a4b5ad; --line: #36453e;
-  --accent: #6cc7cc; --accent-ink: #0f2223; --accent-soft: #1d3a3c; --warn: #e6c063; --warn-soft: #3b3018;
-  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 18px/1.5 var(--body); }
-img { display: block; max-width: 100%; height: auto; }
-a { color: var(--accent); }
-h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.05; margin: 0; letter-spacing: .01em; }
-h2 { font-size: clamp(32px, 5vw, 44px); }
-h3 { font-size: 25px; }
-p { margin: 0; }
-code { font-size: .9em; }
+body { margin: 0; background: var(--sage); color: var(--ink); font: 18px/1.5 var(--body); }
+img, svg { display: block; max-width: 100%; height: auto; }
+a { color: var(--rust); }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.04; margin: 0; letter-spacing: .005em; }
+h2 { font-size: clamp(36px, 5.4vw, 54px); }
+h3 { font-size: 27px; }
+p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
 
 .wrap { width: min(100% - 32px, 1120px); margin-inline: auto; }
-section { padding-block: clamp(44px, 7vw, 76px); }
-.band { background: var(--surface); border-block: 1px solid var(--line); }
-.lead { color: var(--muted); max-width: 62ch; margin-top: 12px; }
+section { padding-block: clamp(52px, 8vw, 92px); scroll-margin-top: 16px; }
+.paper { background: var(--paper); }
+.mist { background: var(--mist); }
+.night { background: var(--night); color: var(--on-night); }
+.lead { color: var(--muted); max-width: 60ch; margin-top: 14px; font-size: 20px; }
+.night .lead { color: var(--on-night-muted); }
+.fine { color: var(--muted); font-size: 15px; margin-top: 22px; }
+.night .fine { color: var(--on-night-muted); }
+.btn { display: inline-block; padding: 13px 20px; border-radius: 10px; background: var(--mist); color: var(--ink); font-weight: 700; text-decoration: none; }
+.btn.main { background: var(--night); color: var(--on-night); }
+.night .btn.main { background: var(--sun-soft); color: var(--night); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.tag { display: inline-block; padding: 3px 9px; border-radius: 6px; font-size: 14px; font-weight: 700; }
+.tag.now { background: #dcefe2; color: #17613a; }
+.tag.next { background: #fbe6d3; color: #8a3c07; }
+.night .tag.next { background: var(--sun-soft); color: var(--night); }
 
-.hero { padding-block: clamp(32px, 6vw, 64px) clamp(40px, 6vw, 68px); }
-.brand { font: 700 26px/1 var(--display); margin-bottom: clamp(28px, 5vw, 48px); }
-.hero h1 { font-size: clamp(46px, 8.5vw, 84px); max-width: 15ch; }
-.hero .lead { font-size: clamp(18px, 2.4vw, 21px); }
-.status { display: inline-block; margin-top: 18px; padding: 8px 12px; border-radius: 8px; background: var(--warn-soft); color: var(--warn); font-size: 16px; font-weight: 700; }
-.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
-.btn { display: inline-block; padding: 12px 18px; border-radius: 10px; background: var(--sunken); color: var(--ink); font-weight: 700; text-decoration: none; }
-.btn.main { background: var(--accent); color: var(--accent-ink); }
-.shot { margin-top: clamp(28px, 5vw, 44px); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.top { background: var(--paper); }
+.top .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; }
+.top .bar img { width: clamp(170px, 26vw, 250px); }
+.top .bar a.try { font-weight: 700; color: var(--ink); white-space: nowrap; }
+.hero { padding-block: clamp(20px, 5vw, 56px) clamp(30px, 5vw, 48px); }
+.hero h1 { font-size: clamp(40px, 6vw, 66px); }
+.hero .lead { font-size: clamp(19px, 2.4vw, 23px); }
+.horizon { background: var(--paper); }
+.horizon svg { width: 100%; }
+.strap { background: var(--night); color: var(--on-night); }
+.strap .wrap { padding-block: 0 26px; font: 700 clamp(25px, 4vw, 36px)/1.1 var(--display); }
 
-.field { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 60px); align-items: center; }
+.problem { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 60px); margin-top: 26px; }
+.rules li { padding-block: 16px 22px; border-top: 2px solid var(--ink); }
+.eyebrow { font: 700 28px/1.1 var(--display); color: var(--rust); margin-bottom: 12px; }
+.card { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; }
+.mist .card, .sage .card { background: var(--paper); }
+.paper .card { background: var(--sage); }
+.card p { color: var(--muted); margin-top: 6px; }
+.stack { display: grid; gap: 14px; }
+
+.products { display: grid; grid-template-columns: minmax(0, 1fr) 150px minmax(0, 1fr); gap: 16px; margin-top: 30px; }
+.product h3 { font-size: 40px; margin-top: 10px; }
+.product .sub { font: 700 24px/1.15 var(--display); color: var(--muted); margin-top: 4px; }
+.product ul { margin-top: 14px; display: grid; gap: 8px; }
+.product li { padding-left: 18px; position: relative; }
+.product li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+.record { display: grid; place-content: center; justify-items: center; gap: 10px; padding: 18px 12px; border-radius: 12px; background: var(--night); color: var(--on-night); text-align: center; font: 700 24px/1.1 var(--display); }
+.record svg { width: 38px; }
+
+.crew { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: center; }
+.points { margin-top: 26px; display: grid; gap: 18px; }
+.points strong { display: block; font-size: 20px; }
+.points span { color: var(--muted); }
 .phones { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.phones img { border-radius: 20px; border: 6px solid var(--night); }
 figure { margin: 0; }
 figcaption { margin-top: 8px; color: var(--muted); font-size: 15px; }
-.phones img { border-radius: 18px; border: 1px solid var(--line); }
-.points { margin: 22px 0 0; padding: 0; list-style: none; display: grid; gap: 16px; }
-.points strong { display: block; }
-.points span { color: var(--muted); }
 
-.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 28px; }
-.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
-.tile .emoji { font-size: 32px; line-height: 1; display: block; margin-bottom: 10px; }
-.tile p { color: var(--muted); margin-top: 6px; font-size: 17px; }
+.equation { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: center; margin-top: 30px; }
+.equation .plus { font: 700 36px/1 var(--display); color: var(--rust); }
+.split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; margin-top: 36px; }
+.split > div { padding-top: 14px; border-top: 2px solid var(--ink); }
+.split > div:last-child { border-top-color: var(--rust); }
+.split p { color: var(--muted); margin-top: 4px; }
 
-.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.drive { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+.ticks { margin-top: 22px; display: grid; gap: 10px; }
+.ticks li { padding-left: 26px; position: relative; }
+.ticks li::before { content: ""; position: absolute; left: 2px; top: .5em; width: 12px; height: 6px; border-left: 3px solid var(--sun-soft); border-bottom: 3px solid var(--sun-soft); transform: rotate(-45deg); }
+.chat { display: grid; gap: 12px; }
+.chat p { max-width: 88%; padding: 12px 16px; border-radius: 12px; }
+.chat .me { justify-self: end; background: var(--sun-soft); color: var(--night); }
+.chat .ai { justify-self: start; background: var(--night-2); }
+
+.three { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.three h3 { color: var(--rust); }
+.three q { display: block; margin-top: 10px; font-style: italic; color: var(--ink); quotes: "\201C" "\201D"; }
+.desk { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 22px; margin-top: 16px; padding: 18px 24px; border-radius: 12px; background: var(--night); color: var(--on-night); }
+.desk strong { font: 700 28px/1 var(--display); color: var(--sun-soft); }
+
+.risk { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(28px, 5vw, 64px); margin-top: 26px; }
+.big { font: 700 clamp(72px, 11vw, 112px)/.95 var(--display); color: var(--rust); }
+.risk .rules strong { display: block; font-size: 20px; }
+.risk .rules span { color: var(--muted); }
+
+.works { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+
+.pipeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 26px; margin-top: 30px; }
+.step { position: relative; padding: 16px; }
+.step h3 { font-size: 24px; }
+.step p { font-size: 16px; }
+.step.facts { background: var(--night); border-color: var(--night); color: var(--on-night); }
+.step.facts h3 { color: var(--sun-soft); }
+.step.facts p { color: var(--on-night-muted); }
+.step:not(:last-child)::after { content: "\2192"; position: absolute; right: -21px; top: 50%; transform: translateY(-50%); color: var(--rust); font-size: 22px; font-weight: 700; }
+.pay { margin-top: 32px; font-size: clamp(22px, 3vw, 28px); font-weight: 700; }
+
+.demo-shot { margin-top: 30px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
 .pair img { border: 1px solid var(--line); border-radius: 12px; }
 
-.scroll { overflow-x: auto; margin-top: 24px; }
-table { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 17px; }
-th { text-align: left; font-size: 14px; color: var(--muted); }
-th, td { padding: 10px 14px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
-
-pre { margin: 18px 0 0; padding: 14px 16px; border-radius: 10px; background: var(--sunken); overflow-x: auto; font-size: 16px; line-height: 1.6; }
-.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 5vw, 60px); }
-.todo { margin: 18px 0 0; padding-left: 20px; display: grid; gap: 8px; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(28px, 5vw, 64px); }
+pre { margin: 18px 0 0; padding: 14px 16px; border-radius: 10px; background: var(--mist); overflow-x: auto; font-size: 16px; line-height: 1.6; }
+.todo { margin-top: 18px; display: grid; gap: 10px; }
+.todo li { padding-left: 18px; position: relative; }
+.todo li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--rust); }
 footer { padding-block: 26px 40px; color: var(--muted); font-size: 15px; }
 
-@media (max-width: 820px) {
-  .field, .two, .pair { grid-template-columns: minmax(0, 1fr); }
-  .grid { grid-template-columns: minmax(0, 1fr); }
+@media (max-width: 860px) {
+  .problem, .crew, .drive, .risk, .two, .split, .works, .pair { grid-template-columns: minmax(0, 1fr); }
+  .products { grid-template-columns: minmax(0, 1fr); }
+  .record { grid-auto-flow: column; padding: 14px; }
+  .equation { grid-template-columns: minmax(0, 1fr); justify-items: stretch; }
+  .equation .plus { justify-self: center; }
+  .three { grid-template-columns: minmax(0, 1fr); }
+  .pipeline { grid-template-columns: minmax(0, 1fr); }
+  .step:not(:last-child)::after { content: "\2193"; right: auto; left: 50%; top: auto; bottom: -27px; transform: translateX(-50%); }
+  .chat p { max-width: 94%; }
 }
 </style>
 </head>
 <body>
 
-<header class="hero wrap">
-  <div class="brand">FarmWorx</div>
-  <h1>Helping farmers manage time + tasks</h1>
-  <p class="lead">A prototype for small farms, built around pictures and voice so the whole crew can use it, including people who don't read the language it was written in, or don't read at all.</p>
-  <p class="status">Prototype with made-up demo data. No login yet, and not yet tested on real phones or tags.</p>
-  <div class="actions">
-    <a class="btn main" href="https://github.com/fedor-i/FarmWorx">See the code</a>
-    <a class="btn" href="#run">Run it yourself</a>
+<header class="top">
+  <div class="wrap bar">
+    <img src="img/logo.png" width="1000" height="222" alt="FarmWorx">
+    <a class="try" href="#demo">Live demo</a>
   </div>
-  <figure class="shot">
-    <img src="img/supervisor-map.jpg" width="800" height="524" alt="Supervisor screen: a satellite map with four coloured fields, one marked no entry, workers and machines shown on it, and a list of alerts and who is on shift.">
-  </figure>
+  <div class="wrap hero">
+    <h1>The crew taps pictures.<br>The supervisor gets briefed on the drive.</h1>
+    <p class="lead">A small-farm tool built around two people: the worker with limited time, signal or reading, and the manager who spends the day behind the wheel.</p>
+    <div class="actions">
+      <a class="btn main" href="demo/">Try the live demo</a>
+      <a class="btn" href="https://github.com/fedor-i/FarmWorx">See the code</a>
+    </div>
+  </div>
+  <div class="horizon" aria-hidden="true">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice">
+      <circle cx="1118" cy="90" r="84" fill="#e8853a"/>
+      <rect y="90" width="1440" height="210" fill="#18271f"/>
+      <g stroke="#2d6b47" stroke-width="5" fill="none">
+        <path d="M1118 90 0 290M1118 90 300 310M1118 90 620 320M1118 90 900 320M1118 90 1124 320M1118 90 1330 320M1118 90 1500 290M1118 90 1520 170"/>
+      </g>
+    </svg>
+  </div>
+  <div class="strap"><div class="wrap">Helping farmers manage time &amp; tasks</div></div>
 </header>
 
-<section class="band">
-  <div class="wrap field">
+<main>
+
+<section>
+  <div class="wrap">
+    <h2>The problem</h2>
+    <div class="problem">
+      <ul class="rules">
+        <li>Tracking tasks across a distributed workforce.</li>
+        <li>Giving managers information that is often poorly tracked on small farms.</li>
+        <li>Existing solutions for large farms are too complex and expensive for smaller operators.</li>
+        <li>Limited automation on small farms requires innovative data capture.</li>
+      </ul>
+      <div>
+        <p class="eyebrow">Serving two user groups</p>
+        <div class="stack">
+          <article class="card"><h3>Workers</h3><p>Minimize requirements to accommodate limited devices, connectivity and technical skills.</p></article>
+          <article class="card"><h3>Farm managers</h3><p>Help overextended managers focus on their highest-value tasks.</p></article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="paper">
+  <div class="wrap">
+    <h2>Two products on one record</h2>
+    <div class="products">
+      <article class="card product">
+        <span class="tag now">In the live demo</span>
+        <h3>Crew app</h3>
+        <p class="sub">Usable without reading a word</p>
+        <ul>
+          <li>One-tap clock in and out</li>
+          <li>Tasks sent to and from the supervisor</li>
+          <li>Pictures with spoken instructions</li>
+          <li>Notes, voice clips and photos</li>
+        </ul>
+      </article>
+      <div class="record">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f4a85c" stroke-width="1.8" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+        One farm record
+      </div>
+      <article class="card product">
+        <span class="tag next">Planned</span>
+        <h3>AI agent</h3>
+        <p class="sub">For hours behind the wheel</p>
+        <ul>
+          <li>Morning and evening reports</li>
+          <li>Answers on demand while driving</li>
+          <li>Sends tasks by voice, with read-back</li>
+          <li>All the usual analytics at the desk</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="mist">
+  <div class="wrap crew">
+    <div>
+      <h2>A crew app you can use without reading</h2>
+      <ul class="points">
+        <li><strong>One tap on the clock</strong><span>Works offline and keeps the real time.</span></li>
+        <li><strong>Tap your face</strong><span>The phone switches to your language, no menu.</span></li>
+        <li><strong>Tasks go both ways</strong><span>Workers send problems and requests up by picture.</span></li>
+        <li><strong>Notes and photos</strong><span>Voice clips and photos reach the supervisor. Translating them is planned.</span></li>
+      </ul>
+    </div>
     <div class="phones">
       <figure>
         <img src="img/worker-phone.jpg" width="780" height="1688" loading="lazy" alt="Worker phone in Spanish: large break and stop buttons, and a task shown as a basket, a strawberry, times 40 and a red field sign.">
@@ -116,93 +258,160 @@ footer { padding-block: 26px 40px; color: var(--muted); font-size: 15px; }
         <figcaption>Walk into a closed field and the phone warns you out loud.</figcaption>
       </figure>
     </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Pictures alone get misread, so the app also speaks</h2>
+    <div class="equation">
+      <article class="card"><h3>Picture</h3><p>What the job is and how many</p></article>
+      <span class="plus" aria-hidden="true">+</span>
+      <article class="card"><h3>Spoken words</h3><p>In the worker's language, or the boss's own voice</p></article>
+      <span class="plus" aria-hidden="true">+</span>
+      <article class="card"><h3>Field sign</h3><p>A color and shape that match the place</p></article>
+    </div>
+    <div class="split">
+      <div><strong>Studies</strong><p>Farmworkers often misread pictograms without training, and do better when they help design them.</p></div>
+      <div><strong>Our own first draft</strong><p>We got two wrong: a wastebasket for harvest bins and a shower for watering.</p></div>
+    </div>
+    <p class="fine">Sources: pictogram comprehension studies (<a href="https://www.pubmed.gov/33400115/">PubMed 33400115</a>, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8207002">PMC8207002</a>); <a href="https://github.com/fedor-i/FarmWorx/blob/main/RESEARCH.md">FarmWorx research notes</a></p>
+  </div>
+</section>
+
+<section class="paper" id="demo">
+  <div class="wrap">
+    <h2>Try the live demo</h2>
+    <p class="lead">It's the real crew and supervisor screens with a made-up farm. There's nothing to install, no sign-up, and what you do stays in your own browser.</p>
+    <div class="actions"><a class="btn main" href="demo/">Open the demo</a></div>
+    <div class="split">
+      <div><strong>Worth trying</strong><p>Send a task from the supervisor and watch it land on the worker's phone. Report a problem back. Drag a worker onto the closed yellow field. Tap a badge at the gate.</p></div>
+      <div><strong>What's simulated</strong><p>Tags and location are stand-ins here: test buttons replace NFC, and you drag people on the map. The demo never reads your real location.</p></div>
+    </div>
+    <figure class="demo-shot">
+      <img src="img/supervisor-map.jpg" width="800" height="524" loading="lazy" alt="Supervisor screen: a satellite map with four coloured fields, one marked no entry, workers and machines shown on it, and a list of alerts and who is on shift.">
+    </figure>
+    <div class="pair">
+      <img src="img/supervisor-tasks.jpg" width="800" height="524" loading="lazy" alt="New task screen with picture buttons for action, crop, field and worker, beside a preview of the worker's view.">
+      <img src="img/timesheet.jpg" width="800" height="524" loading="lazy" alt="Timesheet screen with weekly hours per person, a form to add a missing punch, and a list of shifts.">
+    </div>
+  </div>
+</section>
+
+<section class="night">
+  <div class="wrap drive">
     <div>
-      <h2>Made for the person in the field</h2>
-      <ul class="points">
-        <li><strong>Pictures first, with voice</strong><span>Tasks are icons, a count and a coloured field sign. Tap to hear them, or play a message recorded by the supervisor.</span></li>
-        <li><strong>No reading to get started</strong><span>Workers tap their own face. The app uses the language on their profile, English or Spanish today.</span></li>
-        <li><strong>Works with no signal</strong><span>Clock-ins, task updates and notes are saved on the phone and sent later with the time they happened.</span></li>
-        <li><strong>No phone needed</strong><span>Crew without a smartphone can tap an NFC badge on a shared device at the gate.</span></li>
+      <span class="tag next">Planned</span>
+      <h2 style="margin-top:12px">Talk to it while driving</h2>
+      <p class="lead">Ask anything out loud. It answers from the farm record and can act for you.</p>
+      <ul class="ticks">
+        <li>Hands-free, no screen needed</li>
+        <li>Reads back before it sends</li>
+        <li>Safety alerts break in at once</li>
       </ul>
     </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>What it does</h2>
-    <div class="grid">
-      <article class="tile"><span class="emoji">⏱️</span><h3>Time tracking</h3><p>Clock in and out, breaks, badge tap at the gate and CSV timesheets. Missing punches are flagged, never guessed.</p></article>
-      <article class="tile"><span class="emoji">🧺</span><h3>Picture tasks</h3><p>Supervisors send tasks to workers. Workers report problems and send requests back, all by picture.</p></article>
-      <article class="tile"><span class="emoji">📷</span><h3>Notes and photos</h3><p>Photos, voice notes and text, attached to a task or logged on their own with the field they came from.</p></article>
-      <article class="tile"><span class="emoji">🗺️</span><h3>Geofencing</h3><p>A live map with alerts when a machine leaves its area or someone enters a closed field. People are located only while clocked in.</p></article>
-      <article class="tile"><span class="emoji">📲</span><h3>NFC and RFID tags</h3><p>Worker badges, tool check-out and field signs by NFC. UHF, Bluetooth and GPS trackers share one input, tried so far with simulated reads.</p></article>
-      <article class="tile"><span class="emoji">⛔</span><h3>No-entry fields</h3><p>Close a field after spraying. Tasks there are blocked and the supervisor is alerted. This adds to posted signs and spoken warnings, and doesn't replace them.</p></article>
-    </div>
-  </div>
-</section>
-
-<section class="band">
-  <div class="wrap">
-    <h2>For the supervisor</h2>
-    <p class="lead">Build a task from pictures and see exactly what the worker will see. Follow it across the board, then export the week's hours.</p>
-    <div class="pair">
-      <figure>
-        <img src="img/supervisor-tasks.jpg" width="800" height="524" loading="lazy" alt="New task screen with picture buttons for action, crop, field and worker, beside a preview of the worker's view.">
-        <figcaption>Task builder with a live preview</figcaption>
-      </figure>
-      <figure>
-        <img src="img/timesheet.jpg" width="800" height="524" loading="lazy" alt="Timesheet screen with weekly hours per person, a form to add a missing punch, and a list of shifts.">
-        <figcaption>Hours by person, with CSV download</figcaption>
-      </figure>
+    <div>
+      <div class="chat">
+        <p class="me">What's blocked?</p>
+        <p class="ai">One thing. Mateo stopped at Field 3: the irrigation line is leaking. There's a photo.</p>
+        <p class="me">Tell Rosa to bring the repair kit.</p>
+        <p class="ai">Sending Rosa, in Spanish: take the repair kit to Field 3. Send it?</p>
+        <p class="me">Yes.</p>
+        <p class="ai">Sent. Rosa has it. Anything else before you reach the north block?</p>
+      </div>
+      <p class="fine">Sample conversation for illustration. The agent isn't in the live demo.</p>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <h2>Which tag for what</h2>
-    <p class="lead">Phones only read NFC, so other tags need their own readers. Prices are rough figures, mostly from vendor sites.</p>
-    <div class="scroll">
-      <table>
-        <thead><tr><th>Tag</th><th>Read by</th><th>Rough cost</th><th>Best for</th></tr></thead>
-        <tbody>
-          <tr><td>NFC</td><td>Most phones, by touch</td><td>Low cost per tag</td><td>Badges, tools, field signs</td></tr>
-          <tr><td>UHF RFID</td><td>Fixed reader, or an $800 to $2,500 phone add-on</td><td>$0.10 to $5 per tag</td><td>Bins, tools through a gate</td></tr>
-          <tr><td>Bluetooth</td><td>Gateways or a native app</td><td>$10 to $50 per tag</td><td>Pumps, trailers, generators</td></tr>
-          <tr><td>Cellular GPS</td><td>Reports by itself</td><td>$50 to $200, plus $10 to $30 a month</td><td>Tractors and valuable machines</td></tr>
-        </tbody>
-      </table>
+    <span class="tag next">Planned</span>
+    <h2 style="margin-top:12px">Reports that fit the farmer's day</h2>
+    <div class="three">
+      <article class="card"><h3>Morning brief</h3><p>Who, where, and what could go wrong today</p><q>Twelve people on three fields. Field 2 stays closed until noon after spraying.</q></article>
+      <article class="card"><h3>On demand</h3><p>Any question, any time on the road</p><q>What's at the next field? Four people picking, no open problems.</q><q>Was the leak fixed? Yes. Rosa sent a photo at 2:10.</q></article>
+      <article class="card"><h3>Evening report</h3><p>Hours, jobs, money, and tomorrow's first call</p><q>Eight of ten jobs done. One time punch needs your review.</q></article>
     </div>
-    <p class="lead">Sources and the full reasoning are in the <a href="https://github.com/fedor-i/FarmWorx/blob/main/RESEARCH.md">research notes</a>.</p>
+    <div class="desk"><strong>At the desk</strong><span>Hours by field, labor cost, overtime risk, job output, hours lost waiting and problems by type</span></div>
+    <p class="fine">Sample lines for illustration.</p>
   </div>
 </section>
 
-<section class="band" id="run">
+<section class="mist">
+  <div class="wrap">
+    <h2>Hands-free is not risk-free</h2>
+    <div class="risk">
+      <div>
+        <p class="big">27 sec</p>
+        <p class="lead" style="margin-top:6px">distraction can linger after a voice interaction ends</p>
+        <p style="margin-top:18px">Studies rank listening as the lightest load and talking to an assistant as the heaviest. So the agent mostly talks, and the driver mostly listens.</p>
+      </div>
+      <ul class="rules">
+        <li><strong>One thought at a time</strong><span>Answer first, under 45 words, then wait.</span></li>
+        <li><strong>Only safety interrupts</strong><span>Everything else holds for a pause.</span></li>
+        <li><strong>Read back before acting</strong><span>Every send needs a clear yes.</span></li>
+        <li><strong>Hard things wait</strong><span>Tables and long lists go to a parked review list.</span></li>
+      </ul>
+    </div>
+    <p class="fine">Sources: AAA and University of Utah studies, 2013–15, before today's AI voice agents; later review of voice interaction.</p>
+  </div>
+</section>
+
+<section class="paper">
+  <div class="wrap">
+    <h2>Built for how a farm actually works</h2>
+    <div class="works">
+      <article class="card"><h3>No-entry fields</h3><p>After spraying, a worker who walks in gets a red screen and a spoken warning.</p></article>
+      <article class="card"><h3>Gate badges</h3><p>Workers with no phone tap an NFC badge at a shared gate device.</p></article>
+      <article class="card"><h3>Equipment alerts</h3><p>Trackers and tags flag a tractor or tool that leaves its area.</p></article>
+      <article class="card"><h3>Works with no signal</h3><p>Actions save on the phone and sync later with their original time.</p></article>
+    </div>
+    <p class="fine">All four are in the prototype, tested with simulated data. No-entry warnings add to required signs and don't replace them.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Code counts the hours, AI does the talking</h2>
+    <div class="pipeline">
+      <article class="card step"><h3>Crew app</h3><p>Saves punches, tasks and photos on the phone first</p></article>
+      <article class="card step"><h3>Record</h3><p>Keeps raw events and never edits them</p></article>
+      <article class="card step facts"><h3>Facts layer</h3><p>Computes hours, overtime, budget and blockers</p></article>
+      <article class="card step"><h3>Claude</h3><p>Translates, writes reports and answers from those facts</p></article>
+      <article class="card step"><h3>Voice</h3><p>Phone call first, then CarPlay, with read-back</p></article>
+    </div>
+    <p class="pay">Pay numbers never come from a language model.</p>
+    <p class="fine">Planned design. The crew app, the record and hours calculation exist today. The rest of the facts layer, Claude and voice are still to come.</p>
+  </div>
+</section>
+
+<section class="paper" id="run">
   <div class="wrap two">
     <div>
       <h2>Run it yourself</h2>
-      <p class="lead">This page is a preview. The app itself needs a small server, so it runs on your computer. You need Node 22.13 or newer and nothing else, and demo data is created for you.</p>
+      <p class="lead">You need Node 22.13 or newer. Demo data is created for you.</p>
 <pre><code>git clone https://github.com/fedor-i/FarmWorx.git
 cd FarmWorx
 npm start</code></pre>
-      <p class="lead">Then open <code>http://localhost:3210</code>. The <a href="https://github.com/fedor-i/FarmWorx#five-minute-demo">README</a> has a five-minute demo.</p>
+      <p class="fine">Then open <code>http://localhost:3210</code>. The <a href="https://github.com/fedor-i/FarmWorx#readme">README</a> has a five-minute walkthrough.</p>
     </div>
     <div>
-      <h2>Still to do</h2>
+      <h2>Where it stands</h2>
       <ul class="todo">
-        <li>Add login and permissions before any real data goes in</li>
-        <li>Test NFC, GPS, camera, microphone and speech on real phones</li>
-        <li>Build a native app, since a web app can't check location when closed. Until then, no-entry warnings aren't a safety system</li>
-        <li>Test the pictures with real crews. Emoji are placeholders</li>
-        <li>Add piece rate, payroll export and farm setup screens</li>
+        <li>It's a prototype with made-up data and no login yet</li>
+        <li>NFC, GPS, camera, microphone and speech still need testing on real phones</li>
+        <li>A native app is needed for location when the app is closed. Until then, no-entry warnings aren't a safety system</li>
+        <li>Pictures still need testing with real crews. Emoji are placeholders</li>
       </ul>
     </div>
   </div>
 </section>
 
+</main>
+
 <footer class="wrap">
-  The ranch, people and data shown are made up. Map imagery © Esri.
+  The ranch, people and sample conversations shown are made up. Map imagery © Esri.
 </footer>
 
 </body>

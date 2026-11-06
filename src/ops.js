@@ -1,6 +1,3 @@
-import { randomUUID } from 'node:crypto';
-import { writeFileSync, mkdirSync } from 'node:fs';
-import { join } from 'node:path';
 import { tx } from './db.js';
 import { driftBuffer, distanceToPolygonM, polygonCentre, resolveZone } from '../public/js/geo.js';
 
@@ -84,9 +81,8 @@ export function recordSighting(db, { ownerType, ownerId, lat, lng, accuracy = nu
 function saveMedia(ctx, dataUrl) {
   const match = /^data:([a-z]+\/[a-z0-9.+-]+)(?:;[^;,]+)*;base64,(.+)$/s.exec(dataUrl ?? '');
   require_(match && MEDIA_TYPES[match[1]], 'unsupported media');
-  const file = `${randomUUID()}.${MEDIA_TYPES[match[1]]}`;
-  mkdirSync(ctx.mediaDir, { recursive: true });
-  writeFileSync(join(ctx.mediaDir, file), Buffer.from(match[2], 'base64'));
+  const file = `${crypto.randomUUID()}.${MEDIA_TYPES[match[1]]}`;
+  ctx.saveFile(file, match[2]);
   return file;
 }
 

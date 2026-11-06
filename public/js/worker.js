@@ -471,7 +471,7 @@ app.addEventListener('click', (e) => {
 
 async function signOut() {
   await kvSet('personId', null);
-  location.href = '/worker.html';
+  location.href = 'worker.html';
 }
 
 async function enter(id) {
@@ -494,7 +494,7 @@ async function enter(id) {
   if (pendingTag) {
     const tagUid = pendingTag;
     pendingTag = null;
-    history.replaceState(null, '', '/worker.html');
+    history.replaceState(null, '', 'worker.html');
     onTag(tagUid);
   }
   return undefined;

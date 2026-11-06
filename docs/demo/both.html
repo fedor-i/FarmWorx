@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FarmWorx Demo</title>
+<link rel="icon" href="icon.svg">
+<link rel="stylesheet" href="css/app.css">
+<style>
+html, body { height: 100%; }
+body { display: flex; flex-direction: column; }
+.both { flex: 1; min-height: 0; display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 14px; padding: 12px; }
+.pane { display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 6px; min-height: 0; }
+.pane h2 { font-size: 20px; }
+iframe { width: 100%; height: 100%; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); }
+@media (max-width: 899px) {
+  .both { display: none; }
+  .small-screen { display: block; }
+}
+.small-screen { display: none; padding: 24px 16px; }
+@media (max-width: 899px) { .small-screen { display: block; } }
+</style>
+<script>window.FARMWORX_DEMO = true;</script>
+<script src="js/demo-bar.js" defer></script>
+</head>
+<body>
+<main class="both">
+  <section class="pane"><h2>Worker phone</h2><iframe src="worker.html?person=ana" title="Worker phone" allow="microphone; camera"></iframe></section>
+  <section class="pane"><h2>Supervisor</h2><iframe src="boss.html" title="Supervisor" allow="microphone; camera"></iframe></section>
+</main>
+<p class="small-screen">This view needs a wider screen. <a href="./">Open one screen at a time</a>.</p>
+<script type="module" src="js/core.js"></script>
+</body>
+</html>

@@ -2,7 +2,8 @@ import { createServer } from 'node:http';
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { join, normalize, extname, sep } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { openDb } from './src/db.js';
+import { openDb } from './src/open-db.js';
+import { fileStore } from './src/media.js';
 import { applyOps, ingestReadings } from './src/ops.js';
 import { buildState } from './src/state.js';
 import { timesheet, timesheetCsv } from './src/timesheet.js';
@@ -63,7 +64,8 @@ export function createApp({ db, mediaDir, publicDir = join(ROOT, 'public') }) {
   const broadcast = () => {
     for (const res of listeners) res.write('data: changed\n\n');
   };
-  const ctx = () => ({ db, mediaDir, now: Date.now() });
+  const saveFile = fileStore(mediaDir);
+  const ctx = () => ({ db, saveFile, now: Date.now() });
 
   const server = createServer(async (req, res) => {
     const url = new URL(req.url, 'http://localhost');

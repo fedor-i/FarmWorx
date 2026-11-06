@@ -1,5 +1,3 @@
-import { DatabaseSync } from 'node:sqlite';
-
 const SCHEMA = `
 CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 
@@ -77,11 +75,9 @@ CREATE TABLE IF NOT EXISTS alerts (
 );
 `;
 
-export function openDb(path = ':memory:') {
-  const db = new DatabaseSync(path);
-  db.exec('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
+export function applySchema(db) {
+  db.exec('PRAGMA foreign_keys = ON;');
   db.exec(SCHEMA);
-  return db;
 }
 
 export function tx(db, fn) {

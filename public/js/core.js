@@ -1,5 +1,8 @@
 // Client plumbing shared by the worker, gate and boss screens: offline outbox, state, voice, camera, NFC, GPS.
 
+// Set by the website build. A visitor's real location would be nowhere near the demo farm, so it is never read.
+export const DEMO = Boolean(window.FARMWORX_DEMO);
+
 export const $ = (selector, root = document) => root.querySelector(selector);
 
 export function esc(value) {
@@ -66,7 +69,7 @@ export function applyLocal(state, op) {
 }
 
 export function createStore({ personId = null, onChange }) {
-  const stateUrl = personId ? `/api/state?person=${encodeURIComponent(personId)}` : '/api/state';
+  const stateUrl = personId ? `api/state?person=${encodeURIComponent(personId)}` : 'api/state';
   const cacheKey = `state:${personId ?? 'all'}`;
   let state = null;
   let flushing = false;
@@ -106,7 +109,7 @@ export function createStore({ personId = null, onChange }) {
       for (;;) {
         const batch = (await outboxAll()).slice(0, BATCH_OPS);
         if (!batch.length) break;
-        const response = await fetch('/api/sync', {
+        const response = await fetch('api/sync', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ops: batch.map(({ seq, ...op }) => op) }),
@@ -142,7 +145,7 @@ export function createStore({ personId = null, onChange }) {
   store.start = async () => {
     await store.refresh();
     store.flush();
-    const events = new EventSource('/api/events');
+    const events = new EventSource('api/events');
     events.onmessage = () => store.refresh();
     addEventListener('online', store.flush);
     return store;
@@ -152,7 +155,7 @@ export function createStore({ personId = null, onChange }) {
 }
 
 export function registerServiceWorker() {
-  if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.register('/sw.js').catch(console.warn);
+  if ('serviceWorker' in navigator && isSecureContext) navigator.serviceWorker.register('sw.js').catch(console.warn);
 }
 
 // Spoken words. A phone with no voice for this language stays silent, so pictures must carry the meaning.
@@ -177,7 +180,7 @@ const FIX_MAX_AGE = 60_000;
 const FIX_WAIT = 2500;
 
 export function watchLocation(onFix) {
-  if (!navigator.geolocation) return () => {};
+  if (DEMO || !navigator.geolocation) return () => {};
   const id = navigator.geolocation.watchPosition(
     ({ coords }) => {
       lastFix = { lat: coords.latitude, lng: coords.longitude, accuracy: coords.accuracy, at: Date.now() };
@@ -192,7 +195,7 @@ export function watchLocation(onFix) {
 // Clocking in must never hang on a slow GPS, so this gives up quickly and records no position.
 export function quickFix() {
   if (lastFix && Date.now() - lastFix.at < FIX_MAX_AGE) return Promise.resolve(lastFix);
-  if (!navigator.geolocation) return Promise.resolve({});
+  if (DEMO || !navigator.geolocation) return Promise.resolve({});
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => resolve({ lat: coords.latitude, lng: coords.longitude, accuracy: coords.accuracy }),
@@ -253,7 +256,7 @@ export async function startRecording() {
 }
 
 // NFC. Web NFC exists on Android Chrome only; iPhones reach the app through the URL stored on the tag.
-export const NFC_SUPPORTED = 'NDEFReader' in window;
+export const NFC_SUPPORTED = !DEMO && 'NDEFReader' in window;
 
 export async function scanNfc(onTag) {
   const reader = new NDEFReader();
@@ -270,7 +273,7 @@ export async function scanNfc(onTag) {
 }
 
 export function writeNfc(tagUid) {
-  return new NDEFReader().write({ records: [{ recordType: 'url', data: `${location.origin}/t/${encodeURIComponent(tagUid)}` }] });
+  return new NDEFReader().write({ records: [{ recordType: 'url', data: new URL(`t/${encodeURIComponent(tagUid)}`, document.baseURI).href }] });
 }
 
 export function clockTime(ts, timeZone) {
@@ -305,4 +308,23 @@ export function miniMap(zones, targetId, me) {
     return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" fill="#fff" stroke="var(--ink)" stroke-width="2.5"/>`;
   })() : '';
   return `<svg class="minimap" viewBox="0 0 ${width} ${height}" aria-hidden="true">${shapes}${dot}</svg>`;
+}
+
+// The website demo has no server: its service worker does that job, so the app must wait until it is in control.
+async function demoBackendReady() {
+  await navigator.serviceWorker.register('sw.js');
+  await navigator.serviceWorker.ready;
+  if (navigator.serviceWorker.controller) return;
+  await new Promise((resolve) => {
+    navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true });
+    // A forced reload skips the service worker, and only a normal reload brings it back.
+    setTimeout(() => navigator.serviceWorker.controller || location.reload(), 8000);
+  });
+}
+
+if (DEMO) {
+  await demoBackendReady().catch(() => {
+    document.body.textContent = 'This demo needs a browser that allows service workers. Private windows often block them.';
+    return new Promise(() => {});
+  });
 }
